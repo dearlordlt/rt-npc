@@ -1,0 +1,108 @@
+// Background data
+const BACKGROUNDS = [
+    "Former Imperial Guard veteran with countless war stories (most obviously fabricated)",
+    "Disgraced noble seeking redemption (or just avoiding assassins)",
+    "Orphaned hive-worlder who clawed their way up from nothing",
+    "Former Administratum scribe who fled a life of tedium",
+    "Escaped indentured laborer with a talent for survival",
+    "Educated scholar with theoretical knowledge but practical inexperience",
+    "Street-smart underhiver with questionable connections",
+    "Former ecclesiarchy acolyte with crisis of faith",
+    "Merchant dynasty scion seeking adventure",
+    "Feral world savage adapting to 'civilized' life",
+    "Former Arbites enforcer who questioned orders once too often",
+    "Void-born spacer who's never set foot on a planet",
+    "Forge world laborer with unusual technical aptitude",
+    "Frontier colonist hardened by xenos encounters",
+    "Smuggler with a surprisingly strong moral code",
+    "Former ship crew pressed into service",
+    "Death world survivor with impressive scars",
+    "Agri-world farmhand seeking something more exciting",
+    "Refugee from a world lost to heresy",
+    "Former cult member still unlearning strange habits",
+    "Disgraced medicae seeking redemption",
+    "Hive gang enforcer with surprisingly sophisticated taste",
+    "Asteroid miner with a nose for valuable materials",
+    "Pilgrim who never reached their destination",
+    "Former planetary defense force trooper who survived an invasion",
+    "Bounty hunter who developed a conscience (sometimes)",
+    "Desert nomad with uncanny survival instincts",
+    "Disowned noble testing their mettle",
+    "Former bodyguard whose principal met an unfortunate end",
+    "Salvager who found something they shouldn't have"
+];
+
+const SPECIAL_BACKGROUNDS = {
+    adeptus_mechanicus: [
+        "Tech-adept who questions the Omnissiah's teachings (very quietly)",
+        "Binary cult extremist who sees the flesh as completely weak",
+        "Data-hoarder with memory banks full of questionable information",
+        "Forge world misfit with unorthodox modifications",
+        "Former tech-heretek seeking redemption through service",
+        "Curious experimenter with xeno-technology (disguised as Imperial tech)",
+        "Technical theorist whose ideas are too radical for Mars",
+        "Logic engine expert whose machines keep developing personalities",
+        "Cybernetic optimization enthusiast who upgrades unnecessarily",
+        "Traditionalist who believes technology was better 'in the old days'"
+    ],
+    navigator: [
+        "Navigator house black sheep with unconventional methods",
+        "Warp-seer with disturbing prophetic visions they try to ignore",
+        "Navigator house political exile performing penance",
+        "Third-eye mutant with an unusually strong connection to the warp",
+        "Navigator who claims to see patterns no one else can discern",
+        "Nautically-obsessed navigator who uses sea terminology for everything",
+        "Navigator house scion fleeing an arranged marriage",
+        "Warp-touched philosopher studying 'enlightenment' through navigation",
+        "Navigator with unusual control over their third eye",
+        "Navigator house prodigy who finds conventional routes 'boring'"
+    ],
+    astropath: [
+        "Reluctant soul-bound psycher still traumatized by the experience",
+        "Mind-damaged astropath with unexpected secondary abilities",
+        "Former inquisitorial astropath who 'heard too much'",
+        "Astropath who receives messages not intended for them",
+        "Soul-bound telepath with fragmented Emperor visions",
+        "Astropath who composes psychic messages as poetry",
+        "Hyperactive astropath who sends messages with too much detail",
+        "Former planetary communications officer drafted into imperial service",
+        "Astropath who 'filters' messages based on personal judgment",
+        "Mind-choir escapee seeking independent work"
+    ],
+    abhuman: [
+        "Ratling with expensive taste and light fingers",
+        "Ogryn with surprising intelligence they downplay for advantage",
+        "Squat with engineering genius and tremendous grudges",
+        "Felinid trying very hard to 'act human' around others",
+        "Beastman proving their loyalty through excessive zeal",
+        "Gene-bulked laborer who escaped servitude",
+        "Night-adapted tunnel dweller uncomfortable in bright light",
+        "Water-breathing abhuman who finds spacecraft 'too dry'",
+        "Cold-adapted abhuman who overheats easily",
+        "Abhuman psyker hiding abilities to avoid persecution"
+    ],
+    sensei: [
+        "Immortal convinced their long life is a curse",
+        "Luck-blessed adventurer oblivious to their true nature",
+        "Charismatic leader uncomfortable with others' devotion",
+        "Perpetual trying to leave no trace in imperial records",
+        "Ageless wanderer seeking others of their kind",
+        "Hero whose impressive deeds span suspiciously many decades",
+        "Subtle psychic with unexplainable prescience",
+        "Warrior with regenerative abilities they pass off as 'good medical care'",
+        "Unaging strategist whose combat techniques are 'ancient family secrets'",
+        "Genetic anomaly studied by various factions over centuries"
+    ],
+    xenobreed: [
+        "Half-eldar outcast serving humanity to prove their worth",
+        "Subtle genestealer hybrid unaware of their true nature",
+        "Tau defector with 'progressive ideas' about the Imperium",
+        "Ork-human hybrid with anger management issues",
+        "Human raised by xenos trying to understand their own kind",
+        "Alien symbiote host who claims it's 'just a medical condition'",
+        "Experimental subject of xenobiological tampering",
+        "Hrud-touched human who ages backwards",
+        "Q'orl-hybrid with insectoid thought patterns",
+        "Yu'vath-influenced psyker with disturbing abilities"
+    ]
+};

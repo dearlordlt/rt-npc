@@ -1,0 +1,12 @@
+// Bio templates data
+const BIO_TEMPLATES = [
+    `{name} hails from the {homeworld === "Unknown" ? "mysterious depths of an unknown world" : homeworld}, where {subjPronoun} developed a profound {traitFixed} streak. Now serving as a {career}, {subjPronoun} can often be found {quirkFixed}. Crewmates have learned to tolerate the fact that {subjPronoun} {physicalFixed}.`,
+    
+    `Born amid the {homeworld === "Unknown" ? "unknown reaches of space" : "distinctive culture of " + homeworld}, {name} spent years developing an expertise in {skills[0].toLowerCase()} and {skills.length > 1 ? skills[1].toLowerCase() : "avoiding direct questions"}. As a {species} {career}, {possPronoun} tendency to {quirkFixed} has proven surprisingly useful, though superiors remain concerned about reports that {subjPronoun} {physicalFixed}.`,
+    
+    `{name} serves aboard ship as a {career}, bringing unique {species} perspectives and an unfortunate habit of {quirkFixed}. Colleagues note {possPronoun} exceptional skill with {skills.length > 0 ? skills[Math.floor(Math.random() * skills.length)].toLowerCase() : "avoiding work"}, though many keep their distance due to the fact that {subjPronoun} {physicalFixed}.`,
+    
+    `After an incident involving {pickRandom(["a misplaced plasma core", "three inebriated navigators", "a surprisingly intelligent servitor", "contraband xenos artifacts", "unauthorized use of ship resources", "a case of mistaken identity", "experimental combat stimms", "the captain's favorite amasec", "falsified service records", "a gambling debt gone wrong"])}, {name} found {reflexPronoun} reassigned as a {career}. Despite {traitFixed.startsWith("being ") ? traitFixed : "being " + traitFixed}, {subjPronoun} has proven unexpectedly adept, though shipmates remain wary of {possPronoun} tendency to {quirkFixed}.`,
+    
+    `It is said among the crew that {name} once {pickRandom(["single-handedly defeated an ork raiding party", "outdrank an entire Guard regiment", "survived three standard weeks in a malfunctioning savior pod", "made a profit trading with Eldar corsairs", "memorized an entire sector's worth of warp routes", "talked a customs official into paying them", "accidentally discovered a lost human colony", "bluffed their way out of a Chaos cultist ritual", "invented a still that turns engine coolant into fine amasec", "caught a tyranid genestealer with a fishing rod"])}, though nobody has verified this claim. What is certain is that this {species} {career} is notoriously {traitFixed} and can frequently be observed {quirkFixed}.`
+];

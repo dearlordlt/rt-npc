@@ -1,0 +1,26 @@
+// Quirks data
+const QUIRKS = [
+    "Always carries a lucky charm", "Believes the ship is haunted", "Cannot stand the color green", 
+    "Donates half of earnings to obscure cult", "Excessive personal grooming", "Fears open spaces", 
+    "Gives names to all weapons", "Has a collection of xenos teeth", "Insists on wearing ceremonial garb at all times", 
+    "Jumps at sudden noises", "Keeps a journal of others' sins", "Laughs maniacally in combat", 
+    "Must check equipment exactly three times", "Never speaks above a whisper", "Only eats food that's blue", 
+    "Performs the sign of the aquila constantly", "Quotes the Tactica Imperialis inappropriately", 
+    "Refuses to make eye contact", "Speaks in third person", "Tells the same story to everyone", 
+    "Uses unnecessarily flowery language", "Venerates a specific piece of equipment", 
+    "Writes poetry about ship components", "Xenophobic to comical degrees", 
+    "Yells instead of speaking normally", "Zero concept of personal space",
+    "Believes they're being followed by a spectral ork", "Carries conversation with servo-skull that isn't there", 
+    "Developed allergy to standard-issue lasguns", "Established a tiny shrine in every room they frequent", 
+    "Files daily complaints about the ship's artificial gravity", "Genuinely thinks servitors understand jokes", 
+    "Has memorized thousands of Imperial saints, cites them for every situation", "Interprets regulations with creative flexibility", 
+    "Jury-rigs everything, even things that work perfectly", "Knows exactly how many steps to every location on the ship", 
+    "Lost a bet with a tech-priest and speaks in binary when nervous", "Maintains a detailed log of everyone's snoring patterns", 
+    "Named every single rat on the ship", "Opens doors with elbows to avoid 'contamination'", 
+    "Plays high-stakes regicide against imaginary opponents", "Queries the Emperor for guidance on trivial matters", 
+    "Replaces every tenth word with 'heresy'", "Salutes inanimate objects that resemble Imperial eagles", 
+    "Takes credit for victories that happened before their birth", "Uses elaborate hand signals that nobody understands", 
+    "Vehemently argues with servitors about the proper way to clean", "Wears a different hat for each day of the ship's cycle", 
+    "Xeroxes face on all official documents 'for security'", "Yields to hallway traffic that isn't there", 
+    "Zealously guards personal mug as if it contains secrets of the Imperium"
+];
