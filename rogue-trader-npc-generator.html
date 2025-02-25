@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warhammer 40k Rogue Trader - NPC Generator</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #1a1a1a;
+            color: #d0d0d0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #2a2a2a;
+            padding: 20px;
+            border: 2px solid #c0c0c0;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(255, 100, 0, 0.3);
+        }
+        h1 {
+            color: #ff6400;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
+        }
+        .imperial-seal {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .imperial-seal svg {
+            width: 120px;
+            height: 120px;
+            fill: #ff6400;
+        }
+        .control-panel {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        button {
+            background-color: #4a4a4a;
+            color: #ff6400;
+            border: 2px solid #ff6400;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 16px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #ff6400;
+            color: #000;
+        }
+        select {
+            background-color: #4a4a4a;
+            color: #d0d0d0;
+            border: 2px solid #ff6400;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+        }
+        .character-sheet {
+            background-color: #333;
+            padding: 20px;
+            border: 1px solid #555;
+            margin-top: 20px;
+        }
+        .sheet-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #ff6400;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .character-name {
+            font-size: 24px;
+            color: #ff6400;
+            font-weight: bold;
+        }
+        .character-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .traits, .skills, .equipment {
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #ff6400;
+            border-bottom: 1px solid #555;
+            padding-bottom: 5px;
+        }
+        .characteristics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .characteristic {
+            background-color: #444;
+            padding: 10px;
+            border: 1px solid #555;
+            text-align: center;
+        }
+        .stat-name {
+            color: #ff6400;
+            font-weight: bold;
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .bio {
+            line-height: 1.5;
+        }
+        .equipment-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .equipment-list li {
+            padding: 5px 0;
+            border-bottom: 1px dotted #555;
+        }
+        .equipment-list li:last-child {
+            border-bottom: none;
+        }
+        .flavor-quote {
+            font-style: italic;
+            margin: 20px 0;
+            padding: 10px 20px;
+            border-left: 3px solid #ff6400;
+            background-color: #383838;
+        }
+        .npc-portrait {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #383838;
+            border: 1px solid #555;
+        }
+        .debug {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #333;
+            border: 1px solid #555;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rogue Trader NPC Generator</h1>
+        <div class="imperial-seal">
+            <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#ff6400" stroke-width="2" />
+                <path d="M50 5 L50 95 M5 50 L95 50 M20 20 L80 80 M20 80 L80 20" stroke="#ff6400" stroke-width="2" />
+                <circle cx="50" cy="50" r="10" />
+                <path d="M50 40 L50 25 M60 50 L75 50 M50 60 L50 75 M40 50 L25 50" stroke="#ff6400" stroke-width="3" />
+            </svg>
+        </div>
+        
+        <div class="control-panel">
+            <select id="species-select">
+                <option value="random">Random Species</option>
+                <option value="human">Human</option>
+                <option value="abhuman">Abhuman</option>
+                <option value="adeptus_mechanicus">Adeptus Mechanicus</option>
+                <option value="navigator">Navigator</option>
+                <option value="astropath">Astropath</option>
+                <option value="sensei">Sensei</option>
+                <option value="xenobreed">Xenobreed</option>
+            </select>
+            
+            <select id="career-select">
+                <option value="random">Random Career</option>
+                <option value="arch-militant">Arch-Militant</option>
+                <option value="explorator">Explorator</option>
+                <option value="missionary">Missionary</option>
+                <option value="navigator">Navigator</option>
+                <option value="rogue_trader">Rogue Trader</option>
+                <option value="seneschal">Seneschal</option>
+                <option value="void-master">Void-Master</option>
+                <option value="astropath_transcendent">Astropath Transcendent</option>
+            </select>
+            
+            <button id="generate-button">Generate NPC</button>
+        </div>
+        
+        <div id="character-output" class="character-sheet">
+            <!-- Character data will be filled here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Data arrays for generation
+        const SPECIES = {
+            human: { name: "Human", weight: 50 },
+            abhuman: { name: "Abhuman", weight: 15 },
+            adeptus_mechanicus: { name: "Adeptus Mechanicus", weight: 15 },
+            navigator: { name: "Navigator", weight: 10 },
+            astropath: { name: "Astropath", weight: 5 },
+            sensei: { name: "Sensei", weight: 3 },
+            xenobreed: { name: "Xenobreed", weight: 2 }
+        };
+        
+        const CAREERS = {
+            arch_militant: { name: "Arch-Militant", weight: 20 },
+            explorator: { name: "Explorator", weight: 15 },
+            missionary: { name: "Missionary", weight: 15 },
+            navigator: { name: "Navigator", weight: 10 },
+            rogue_trader: { name: "Rogue Trader", weight: 10 },
+            seneschal: { name: "Seneschal", weight: 15 },
+            void_master: { name: "Void-Master", weight: 10 },
+            astropath_transcendent: { name: "Astropath Transcendent", weight: 5 }
+        };
+        
+        const HUMAN_FIRST_NAMES = [
+            "Abalus", "Belus", "Castor", "Drusus", "Egan", "Felix", "Gallus", "Hector", 
+            "Ignatius", "Jurgen", "Karius", "Lucius", "Magnus", "Nero", "Octavian", "Petrus", 
+            "Quintus", "Rufus", "Septimus", "Titus", "Ulysses", "Varus", "Wulfrik", "Xander", 
+            "Yarrick", "Zephyrus", "Artemisia", "Belladonna", "Cassandra", "Drusilla", "Eleni", 
+            "Flavia", "Galatea", "Helena", "Iona", "Julia", "Korina", "Lucilla", "Minerva", 
+            "Neptunia", "Octavia", "Priscilla", "Quintilla", "Rhea", "Selene", "Theodora", 
+            "Ursula", "Valeria", "Wilhelmina", "Xanthia", "Yseult", "Zenobia"
+        ];
+        
+        const MECHANICUS_NAMES = [
+            "Algorith", "Binarius", "Cogitator", "Datasmith", "Enginseer", "Ferrum", "Gamma-216", 
+            "Hexadecimal", "Integratus", "Juvius-Theta", "Kappa-892", "Logis", "Mech-Wright", 
+            "Noospheric", "Omni-937", "Primus", "Quantum", "Reductor", "Servitor-001", "Teknis", 
+            "Unit-ZX92", "Vox-Machina", "Watt-743", "Xerxes-Alpha", "Yoctologic", "Zed-Lambda"
+        ];
+        
+        const NAVIGATOR_NAMES = [
+            "Absolom", "Belisarius", "Cephus", "Demetrius", "Ethriel", "Filius", "Gaius", 
+            "Hieronomus", "Ishmael", "Jordanus", "Keebler", "Lotharion", "Morpheus", "Nemo", 
+            "Oberstein", "Phaeton", "Quintax", "Romulus", "Sirius", "Thaddeus", "Uriel", 
+            "Vandrex", "Wolsey", "Xanthus", "Yorick", "Zeno"
+        ];
+        
+        const LAST_NAMES = [
+            "Agrippina", "Balthazar", "Cawdor", "Degallio", "Escher", "Fortunus", "Greel", 
+            "Helmawr", "Integritus", "Jerico", "Kell", "Lex", "Maximus", "Noctis", "Orlock", 
+            "Phalanx", "Quorum", "Rex", "Sturm", "Trazyn", "Ulanti", "Vex", "Winterscale", 
+            "Xerxes", "Yul", "Zar", "Blackwood", "Coldsoul", "Darhk", "Fireheart", "Goldenhand", 
+            "Ironhide", "Nightshade", "Stormbringer", "Trueheart", "Wolfsbane"
+        ];
+        
+        const TITLES = [
+            "the Bold", "the Brave", "the Cruel", "the Daring", "the Enlightened", "the Fated", 
+            "the Glorious", "the Heretical", "the Impious", "the Judged", "the Killer", "the Lost", 
+            "the Magnificent", "the Noble", "the Omniscient", "the Pious", "the Questionable", 
+            "the Ruthless", "the Sinful", "the Terrible", "the Unmerciful", "the Vengeful", 
+            "the Wicked", "the Xenophobic", "the Yielding", "the Zealous"
+        ];
+        
+        const PERSONALITY_TRAITS = [
+            "Alcoholic", "Boastful", "Calculating", "Daring", "Eccentric", "Flamboyant", 
+            "Gluttonous", "Hypochondriac", "Impatient", "Jovial", "Kleptomaniac", "Loquacious", 
+            "Melancholic", "Neurotic", "Obsessive", "Paranoid", "Quirky", "Ruthless", "Superstitious", 
+            "Twitchy", "Unhinged", "Verbose", "Whimsical", "Xenophobic", "Yearning", "Zealous",
+            "Absurdly Formal", "Believes They're A Saint", "Collects Oddities", "Despises Technology", 
+            "Everything Is A Conspiracy", "Fancies Themselves A Poet", "Grox Racing Enthusiast", 
+            "Has Named Every Weapon", "Insists On Using Archaic Terms", "Judges Everyone's Uniform", 
+            "Keeps Talking To A Skull", "Laughs At Inappropriate Times", "Must Touch Every Doorway", 
+            "Never Removes Helmet", "Only Speaks In Tercets", "Practices Combat Stances Everywhere", 
+            "Quotes Regulations Constantly", "Refers To Self In Third Person", "Suspects Everyone Is Possessed", 
+            "Talks To Machine Spirits Aloud", "Uses Unnecessarily Complex Words", "Very Concerned About Retirement Plan", 
+            "Wears Far Too Many Medals", "Xenos Cuisine Connoisseur", "Yearly Pilgrimages To Random Planets", 
+            "Zero Understanding Of Personal Space"
+        ];
+        
+        const QUIRKS = [
+            "Always carries a lucky charm", "Believes the ship is haunted", "Cannot stand the color green", 
+            "Donates half of earnings to obscure cult", "Excessive personal grooming", "Fears open spaces", 
+            "Gives names to all weapons", "Has a collection of xenos teeth", "Insists on wearing ceremonial garb at all times", 
+            "Jumps at sudden noises", "Keeps a journal of others' sins", "Laughs maniacally in combat", 
+            "Must check equipment exactly three times", "Never speaks above a whisper", "Only eats food that's blue", 
+            "Performs the sign of the aquila constantly", "Quotes the Tactica Imperialis inappropriately", 
+            "Refuses to make eye contact", "Speaks in third person", "Tells the same story to everyone", 
+            "Uses unnecessarily flowery language", "Venerates a specific piece of equipment", 
+            "Writes poetry about ship components", "Xenophobic to comical degrees", 
+            "Yells instead of speaking normally", "Zero concept of personal space",
+            "Believes they're being followed by a spectral ork", "Carries conversation with servo-skull that isn't there", 
+            "Developed allergy to standard-issue lasguns", "Established a tiny shrine in every room they frequent", 
+            "Files daily complaints about the ship's artificial gravity", "Genuinely thinks servitors understand jokes", 
+            "Has memorized thousands of Imperial saints, cites them for every situation", "Interprets regulations with creative flexibility", 
+            "Jury-rigs everything, even things that work perfectly", "Knows exactly how many steps to every location on the ship", 
+            "Lost a bet with a tech-priest and speaks in binary when nervous", "Maintains a detailed log of everyone's snoring patterns", 
+            "Named every single rat on the ship", "Opens doors with elbows to avoid 'contamination'", 
+            "Plays high-stakes regicide against imaginary opponents", "Queries the Emperor for guidance on trivial matters", 
+            "Replaces every tenth word with 'heresy'", "Salutes inanimate objects that resemble Imperial eagles", 
+            "Takes credit for victories that happened before their birth", "Uses elaborate hand signals that nobody understands", 
+            "Vehemently argues with servitors about the proper way to clean", "Wears a different hat for each day of the ship's cycle", 
+            "Xeroxes face on all official documents 'for security'", "Yields to hallway traffic that isn't there", 
+            "Zealously guards personal mug as if it contains secrets of the Imperium"
+        ];
+        
+        const PHYSICAL_QUIRKS = [
+            "Ancient augmetic eye constantly recalibrating", "Bionic hand that makes inappropriate gestures randomly", 
+            "Collection of scars arranged to form constellations", "Decorative but non-functional extra armor plates", 
+            "Elaborate facial tattoos of questionable Imperial symbolism", "Face twitches when lying or nervous", 
+            "Gold-plated teeth with engravings of tiny skulls", "Has different colored eyes that seem to change shade", 
+            "Impressive collection of ear piercings from different worlds", "Jaw clicks loudly during tense situations", 
+            "Keeps a small rodent in a coat pocket as a pet", "Left eye blinks independently of right", 
+            "Massive beard containing hidden emergency supplies", "Neck covered in devotional purity seals", 
+            "Ornamental cybernetics that serve no practical purpose", "Perpetually smells of sacred incense and engine oil", 
+            "Questionable amateur surgery scars", "Ritualistic scarification in the shape of Imperial symbols", 
+            "Skin condition that glows faintly in darkness", "Tattooed a full copy of ship regulations on back", 
+            "Unusual gait due to poorly-fitted augmetic leg", "Vat-grown replacement ear that's noticeably the wrong size", 
+            "Wears gloves with individual fingers cut off in specific pattern", "Xenograft skin patch of unusual color and texture", 
+            "Yellow teeth filed to points 'for emergencies'", "Zealously polishes chrome dome daily"
+        ];
+
+        const EQUIPMENT_WEAPONS = [
+            "Ancient family heirloom chainsword", "Bolt pistol with custom ivory grip", "Combi-weapon that jams dramatically", 
+            "Dueling laspistol with ornate filigree", "Elegant power sword with flickering energy field", 
+            "Flamingly ostentatious plasma pistol", "Grav-gun that makes concerning noises", 
+            "Heavy bolter (inappropriately carried for their size)", "Inferno pistol with saint's effigy", 
+            "Jokaero-modified meltagun", "Krak grenades kept in ornamental pouch", 
+            "Long-las with unnecessary number of scopes", "Melta bombs treated as casual accessories", 
+            "Needlessly complex archeotech weapon", "Overcharged laspistol (burns through power packs)", 
+            "Power maul with 'Gentle Persuasion' engraved on side", "Quaintly decorated shotgun with spread issues", 
+            "Refractor field generator that occasionally shorts out", "Servo-skull with mounted stub gun", 
+            "Thunder hammer too large to practically wield", "Unnecessarily serrated combat knife collection", 
+            "Volkite serpenta of dubious authenticity", "Web pistol that's sticky even when not fired", 
+            "Xenophase blade that whispers to its wielder", "Yet another hidden blade in boot/sleeve/hat", 
+            "Zero-point energy disruptor (actually just a painted lasgun)"
+        ];
+
+        const EQUIPMENT_ARMOR = [
+            "Artificer carapace armor with religious inscriptions", "Bulky flak armor covered in unnecessary pouches", 
+            "Carapace armor with trophy racks", "Dented power armor of questionable origins", 
+            "Elegant mesh undersuit beneath formal attire", "Flak coat lined with purity seals", 
+            "Gaudy golden pauldrons that blind in direct light", "Heavy storm trooper carapace with custom paint", 
+            "Imperial Navy void suit modified for daily wear", "Jury-rigged refractor field prone to fluctuations", 
+            "Kaskrin-pattern carapace with personal modifications", "Light mesh armor beneath lavish clothing", 
+            "Mesh undersuit with dramatic greatcoat", "Naval officer's uniform reinforced with armor plates", 
+            "Ornamental armor more decorative than protective", "Power armor limb segments mixed with regular clothing", 
+            "Questionably-sourced xenos armor components", "Rosarius force field generator (may be counterfeit)", 
+            "Segmented armor plates visible beneath robes", "Thermoplas mesh suit with cooling system constantly whirring", 
+            "Unnecessarily spiked pauldrons on otherwise standard armor", "Voidsuit decorated to resemble formal wear", 
+            "Worn leather longcoat concealing mesh weave", "Xenotech energy shield disguised as Imperial tech", 
+            "Yet more armor plates strapped wherever they fit", "Zero-g combat harness worn at all times"
+        ];
+
+        const EQUIPMENT_GEAR = [
+            "Auspex that picks up non-existent readings", "Battered data-slate filled with questionable picts", 
+            "Chrono that tells time on multiple worlds simultaneously", "Dataslate filled with badly-written personal memoirs", 
+            "Engraved flask of 'medicinal' amasec", "Field rations that are surprisingly gourmet", 
+            "Grapnel launcher with unnecessary gold plating", "Hololithic projector displaying family/regiment", 
+            "Imperial Infantryman's Uplifting Primer (heavily annotated)", "Joyless ration packs hoarded obsessively", 
+            "Krak grenade used as paperweight", "Luggage servitor that follows with excessive noise", 
+            "Micro-bead vox unit that occasionally broadcasts prayers", "Numerous pouches containing mysterious contents", 
+            "Overly complex multi-tool with questionable functions", "Personal vox-caster playing imperial hymns", 
+            "Quill set and parchment instead of data-slate", "Rebreather worn even in breathable atmospheres", 
+            "Servoskull companion with personality quirks", "Treasured collection of campaign medals (some invented)", 
+            "Unnecessarily large canteen full of suspicious liquid", "Vial collection of 'holy' waters from various worlds", 
+            "Wax seal kit for adding dramatic flair to orders", "Xenos trinket claimed to be 'Imperial relic'", 
+            "Yellowed purity seals applied to everything owned", "Zoom-magnoculars used inappropriately indoors"
+        ];
+
+        const NAVIGATOR_EQUIPMENT = [
+            "Astronavigation charts bound in human skin", "Blindfold woven with psychically attuned threads", 
+            "Crystal prism for warp current readings", "Divination tools of questionable Imperial approval", 
+            "Elaborate headdress concealing third eye", "Family grimoire of warp routes", 
+            "Gilded sextant for measuring empyrean angles", "Hourglass filled with warp-touched sand", 
+            "Inherited compass that doesn't point north", "Jewelry containing focusing crystals", 
+            "Kaleidoscopic lenses for different warp conditions", "Longsight spyglass claimed to see through time", 
+            "Meditation beads made from wraithbone fragments", "Nautical instruments modified for void use", 
+            "Ocular augments with multiple filtering modes", "Pendulum of unusual metal for warp dowsing", 
+            "Quill that writes in shifting colors", "Resonance tuning fork for warp harmonics", 
+            "Star charts with sections deliberately obscured", "Temporal measuring devices of archeotech origin", 
+            "Unusual helm with built-in sensory deprivation", "Vials of chemical compounds for enhancing third eye", 
+            "Warp-attuned crystals in elaborate settings", "Xenotech devices disguised as Imperial instruments", 
+            "Yarrow sticks for emergency warp path divination", "Zero-gravity navigation tools from Dark Age"
+        ];
+
+        const TECH_PRIEST_EQUIPMENT = [
+            "Arcane mechadendrite with questionable modifications", "Binary cant translator (frequently mistranslates)", 
+            "Censers of sacred machine oil", "Diagnostic scanner that makes inappropriate noises", 
+            "Electro-priest gauntlets (prone to discharge)", "Frequency scanner picking up ghost signals", 
+            "Glitching servo-skull assistant", "Heavily augmented servo-arm with personality", 
+            "Incense holders attached to every limb", "Jury-rigged omnissian axe/multitool", 
+            "Klaxon vocalizer with unnecessary volume", "Logic engine calculating meaningless probabilities", 
+            "Mechadendrite tentacles with too many attachments", "Noospheric interface that leaks data", 
+            "Omnissian sigil that glows during arguments", "Personal fabricator printing questionable objects", 
+            "Quantum stabilizer for uncertain situations", "Redundant cybernetic implants 'just in case'", 
+            "Servo-harness carrying unnecessary equipment", "Tech-priest robes with too many pockets", 
+            "Unnecessarily complex cogitator for simple tasks", "Vat-grown spare organs in jars", 
+            "Welding mechadendrite used for making points in conversation", "Xerographic memory unit filled with obscure facts", 
+            "Yield-optimizing incense blend in pressurized containers", "Zero-point energy manipulator (just a fancy magnet)"
+        ];
+
+        const ASTROPATH_EQUIPMENT = [
+            "Astral sphere focusing device", "Brain-impulse unit with custom modifications", 
+            "Crystal array for thought amplification", "Divination cards showing disturbing futures", 
+            "Empyrean echo recorder", "Focus-hood with unnecessary ornaments", 
+            "Ghost-quill that writes without being held", "Hololith projector showing psychic impressions", 
+            "Incense burner with calming psychoactive compounds", "Juvenat treatments to prevent mind-degradation", 
+            "Kinetic dampener field to prevent accidents", "Lexmechanic transcription servitor", 
+            "Mind-shielding circlet of archeotech origin", "Null-rod for psychic emergencies", 
+            "Occult tome bound in strange leather", "Psi-amplifier disguised as decorative staff", 
+            "Quietude chamber (portable)",  "Resonator crystal tuned to alpha brainwaves", 
+            "Soul-binding commemoration markings", "Telepathic amplifier with feedback issues", 
+            "Unsanctioned psychic focus objects", "Vox-recorder for messages from the beyond", 
+            "Warp-echo measuring instruments", "Xenographic thought transcriber", 
+            "Yearning pendulum for emotional detection", "Zone of silence generator (often malfunctions)"
+        ];
+
+        const ROGUE_TRADER_EQUIPMENT = [
+            "Ancient family warrant framed in gold", "Baroque dueling pistol with family crest", 
+            "Collection of exotic currency from multiple sectors", "Decorative void-compass showing home world", 
+            "Elaborate code-cylinder containing trading rights", "Family heirloom power sword", 
+            "Gilded merchant scales for precious materials", "Hololithic projector showing dynasty achievements", 
+            "Imperial writ sealed in stasis field", "Jewelry worth the GDP of small planets", 
+            "Kinetic sculpture from extinct xenos race", "Luxury chronometer with multiple world times", 
+            "Master-crafted formal outfit with hidden armor", "Navigator house alliance tokens", 
+            "Ornate data-slate containing trade agreements", "Personal teleport homer disguised as jewelry", 
+            "Quantum-locked safe containing secret documents", "Rare vintage amasec in crystal decanter", 
+            "Signet ring containing hidden poison", "Trade agreement stylus made from wraithbone", 
+            "Unique xenotech artifacts as conversation pieces", "Voting proxy icons for distant holdings", 
+            "Warrant of Trade (conspicuously displayed at all times)", "Xenos language translator (suspiciously advanced)", 
+            "Yacht-pattern shuttle keyfob prominently displayed", "Zero-g decanter set for void entertaining"
+        ];
+
+        const FLAVOR_QUOTES = [
+            "The Emperor protects, but a loaded bolter helps.",
+            "In the grim darkness of the far future, there is only war... and paperwork.",
+            "Heresy is like a tree. Its roots lie in darkness while its leaves wave in the sun.",
+            "Even a man who has nothing can still offer his life to the Emperor.",
+            "Fear the alien, the mutant, the heretic... and the ship's cook on Meatloaf Monday.",
+            "There is no such thing as innocence, only degrees of guilt... and expense reports.",
+            "The difference between heresy and faith is perspective... and who's holding the flamer.",
+            "Trust in the Emperor, but verify the warp coordinates.",
+            "Thought for the day: A suspicious mind is a healthy mind... a paranoid mind gets promotions.",
+            "Success is measured in blood; yours or your enemy's... preferably your enemy's.",
+            "If you cannot speak well of your captain, invent something implausible.",
+            "Faith grows from the barrel of a gun... accounting grows from the barrel of many guns.",
+            "For the Emperor! For the Imperium! For better quarters on Deck 7!",
+            "Only in death does duty end... retirement plans are heretical thoughts.",
+            "It's not hoarding if it's 'strategic reserves'.",
+            "The warp is like my commanding officer - incomprehensible, terrifying, and prone to sudden mood swings.",
+            "If the plan fails, blame the Navigator. If it succeeds, it was your idea all along.",
+            "My loyalty to the Imperium is matched only by my collection of contraband.",
+            "When in doubt, shoot everything and let the Emperor sort it out.",
+            "I came, I saw, I filed the appropriate requisition forms.",
+            "If you think this looks bad, you should see what we consider 'good' around here.",
+            "Better to burn out than fade away... preferably while taking heretics with you.",
+            "The Emperor may judge you, but his ammunition is expensive.",
+            "Three things are infinite: the Emperor's wisdom, human stupidity, and the ship's maintenance requests.",
+            "Speak softly and carry a big gun... or just skip the softly part.",
+            "It's only techno-heresy if a tech-priest catches you.",
+            "Knowledge is power, hide it well... or charge a consultation fee.",
+            "In the absence of orders, find something heretical and destroy it.",
+            "The difference between bravery and stupidity is whether you survive.",
+            "I don't suffer from insanity, I enjoy every minute of it... as does the voice in my bolt pistol."
+        ];
+
+        // Utility functions
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        function pickRandom(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+        
+        function weightedRandom(obj) {
+            const weights = Object.values(obj).map(item => item.weight);
+            const totalWeight = weights.reduce((a, b) => a + b, 0);
+            let random = Math.random() * totalWeight;
+            
+            for (const key in obj) {
+                random -= obj[key].weight;
+                if (random <= 0) {
+                    return key;
+                }
+            }
+            
+            return Object.keys(obj)[0]; // Fallback
+        }
+        
+        function generateCharacteristicValue() {
+            // Generate values between 25-45 as base stats
+            return randomInt(25, 45);
+        }
+        
+        function generateName(species) {
+            let firstName, lastName;
+            
+            switch(species) {
+                case 'adeptus_mechanicus':
+                    return pickRandom(MECHANICUS_NAMES);
+                case 'navigator':
+                    firstName = pickRandom(NAVIGATOR_NAMES);
+                    break;
+                default:
+                    firstName = pickRandom(HUMAN_FIRST_NAMES);
+            }
+            
+            lastName = pickRandom(LAST_NAMES);
+            
+            // 25% chance to add a title
+            if (Math.random() < 0.25) {
+                return `${firstName} ${lastName} ${pickRandom(TITLES)}`;
+            }
+            
+            return `${firstName} ${lastName}`;
+        }
+        
+        function generateGender() {
+            // Simplified to just male and female with 50/50 probability
+            return Math.random() < 0.5 ? "Male" : "Female";
+        }
+        
+        function generateAge(species) {
+            switch(species) {
+                case 'navigator':
+                case 'sensei':
+                    return randomInt(50, 300);
+                case 'adeptus_mechanicus':
+                    return randomInt(30, 400);
+                default:
+                    return randomInt(20, 60);
+            }
+        }
+        
+        function generateHomeworld() {
+            const worlds = [
+                "Footfall", "Port Wander", "Scintilla", "Sepheris Secundus", "Solomon", 
+                "Valhalla", "Cadia", "Armageddon", "Fenris", "Catachan", "Tanith", 
+                "Necromunda", "Krieg", "Elysia", "Mordia", "Vostroya", "Tallarn", 
+                "Macragge", "Baal", "Medusa", "Prospero", "Caliban", "Chogoris", 
+                "Nostramo", "Barbarus", "Colchis", "Inwit", "Olympia", "Deliverance"
+            ];
+            
+            const prefixes = [
+                "Holy", "Blessed", "Sacred", "Fallen", "Forgotten", "Lost", "New", "Old", 
+                "Upper", "Lower", "Greater", "Lesser", "Inner", "Outer", "Port", "Fort", 
+                "Mount", "Saint", "Emperor's", "Imperial"
+            ];
+            
+            const suffixes = [
+                "Prime", "Secundus", "Tertius", "Quartus", "Quintus", "Sextus", "Septimus", 
+                "Major", "Minor", "Superior", "Inferior", "Alpha", "Beta", "Gamma", "Delta", 
+                "Ultima", "Primus", "Magnus", "Extremis", "Maximus", "Minimus"
+            ];
+            
+            // 50% chance of using an existing world
+            if (Math.random() < 0.5) {
+                return pickRandom(worlds);
+            }
+            
+            // Otherwise generate a random world name
+            let name = "";
+            
+            // 40% chance to add a prefix
+            if (Math.random() < 0.4) {
+                name += pickRandom(prefixes) + " ";
+            }
+            
+            // Random world name (using consonants and vowels)
+            const consonants = "bcdfghjklmnpqrstvwxz";
+            const vowels = "aeiouy";
+            
+            let length = randomInt(4, 10);
+            let useConsonant = Math.random() < 0.5;
+            
+            for (let i = 0; i < length; i++) {
+                if (useConsonant) {
+                    name += consonants.charAt(Math.floor(Math.random() * consonants.length));
+                } else {
+                    name += vowels.charAt(Math.floor(Math.random() * vowels.length));
+                }
+                useConsonant = !useConsonant;
+            }
+            
+            // Capitalize first letter
+            name = name.charAt(0).toUpperCase() + name.slice(1);
+            
+            // 30% chance to add a suffix
+            if (Math.random() < 0.3) {
+                name += " " + pickRandom(suffixes);
+            }
+            
+            return name;
+        }
+        
+        function generateBackground(species, career) {
+            const backgrounds = [
+                "Former Imperial Guard veteran with countless war stories (most obviously fabricated)",
+                "Disgraced noble seeking redemption (or just avoiding assassins)",
+                "Orphaned hive-worlder who clawed their way up from nothing",
+                "Former Administratum scribe who fled a life of tedium",
+                "Escaped indentured laborer with a talent for survival",
+                "Educated scholar with theoretical knowledge but practical inexperience",
+                "Street-smart underhiver with questionable connections",
+                "Former ecclesiarchy acolyte with crisis of faith",
+                "Merchant dynasty scion seeking adventure",
+                "Feral world savage adapting to 'civilized' life",
+                "Former Arbites enforcer who questioned orders once too often",
+                "Void-born spacer who's never set foot on a planet",
+                "Forge world laborer with unusual technical aptitude",
+                "Frontier colonist hardened by xenos encounters",
+                "Smuggler with a surprisingly strong moral code",
+                "Former ship crew pressed into service",
+                "Death world survivor with impressive scars",
+                "Agri-world farmhand seeking something more exciting",
+                "Refugee from a world lost to heresy",
+                "Former cult member still unlearning strange habits",
+                "Disgraced medicae seeking redemption",
+                "Hive gang enforcer with surprisingly sophisticated taste",
+                "Asteroid miner with a nose for valuable materials",
+                "Pilgrim who never reached their destination",
+                "Former planetary defense force trooper who survived an invasion",
+                "Bounty hunter who developed a conscience (sometimes)",
+                "Desert nomad with uncanny survival instincts",
+                "Disowned noble testing their mettle",
+                "Former bodyguard whose principal met an unfortunate end",
+                "Salvager who found something they shouldn't have"
+            ];
+            
+            // Special backgrounds based on species
+            const specialBackgrounds = {
+                adeptus_mechanicus: [
+                    "Tech-adept who questions the Omnissiah's teachings (very quietly)",
+                    "Binary cult extremist who sees the flesh as completely weak",
+                    "Data-hoarder with memory banks full of questionable information",
+                    "Forge world misfit with unorthodox modifications",
+                    "Former tech-heretek seeking redemption through service",
+                    "Curious experimenter with xeno-technology (disguised as Imperial tech)",
+                    "Technical theorist whose ideas are too radical for Mars",
+                    "Logic engine expert whose machines keep developing personalities",
+                    "Cybernetic optimization enthusiast who upgrades unnecessarily",
+                    "Traditionalist who believes technology was better 'in the old days'"
+                ],
+                navigator: [
+                    "Navigator house black sheep with unconventional methods",
+                    "Warp-seer with disturbing prophetic visions they try to ignore",
+                    "Navigator house political exile performing penance",
+                    "Third-eye mutant with an unusually strong connection to the warp",
+                    "Navigator who claims to see patterns no one else can discern",
+                    "Nautically-obsessed navigator who uses sea terminology for everything",
+                    "Navigator house scion fleeing an arranged marriage",
+                    "Warp-touched philosopher studying 'enlightenment' through navigation",
+                    "Navigator with unusual control over their third eye",
+                    "Navigator house prodigy who finds conventional routes 'boring'"
+                ],
+                astropath: [
+                    "Reluctant soul-bound psycher still traumatized by the experience",
+                    "Mind-damaged astropath with unexpected secondary abilities",
+                    "Former inquisitorial astropath who 'heard too much'",
+                    "Astropath who receives messages not intended for them",
+                    "Soul-bound telepath with fragmented Emperor visions",
+                    "Astropath who composes psychic messages as poetry",
+                    "Hyperactive astropath who sends messages with too much detail",
+                    "Former planetary communications officer drafted into imperial service",
+                    "Astropath who 'filters' messages based on personal judgment",
+                    "Mind-choir escapee seeking independent work"
+                ],
+                abhuman: [
+                    "Ratling with expensive taste and light fingers",
+                    "Ogryn with surprising intelligence they downplay for advantage",
+                    "Squat with engineering genius and tremendous grudges",
+                    "Felinid trying very hard to 'act human' around others",
+                    "Beastman proving their loyalty through excessive zeal",
+                    "Gene-bulked laborer who escaped servitude",
+                    "Night-adapted tunnel dweller uncomfortable in bright light",
+                    "Water-breathing abhuman who finds spacecraft 'too dry'",
+                    "Cold-adapted abhuman who overheats easily",
+                    "Abhuman psyker hiding abilities to avoid persecution"
+                ],
+                sensei: [
+                    "Immortal convinced their long life is a curse",
+                    "Luck-blessed adventurer oblivious to their true nature",
+                    "Charismatic leader uncomfortable with others' devotion",
+                    "Perpetual trying to leave no trace in imperial records",
+                    "Ageless wanderer seeking others of their kind",
+                    "Hero whose impressive deeds span suspiciously many decades",
+                    "Subtle psychic with unexplainable prescience",
+                    "Warrior with regenerative abilities they pass off as 'good medical care'",
+                    "Unaging strategist whose combat techniques are 'ancient family secrets'",
+                    "Genetic anomaly studied by various factions over centuries"
+                ],
+                xenobreed: [
+                    "Half-eldar outcast serving humanity to prove their worth",
+                    "Subtle genestealer hybrid unaware of their true nature",
+                    "Tau defector with 'progressive ideas' about the Imperium",
+                    "Ork-human hybrid with anger management issues",
+                    "Human raised by xenos trying to understand their own kind",
+                    "Alien symbiote host who claims it's 'just a medical condition'",
+                    "Experimental subject of xenobiological tampering",
+                    "Hrud-touched human who ages backwards",
+                    "Q'orl-hybrid with insectoid thought patterns",
+                    "Yu'vath-influenced psyker with disturbing abilities"
+                ]
+            };
+            
+            // If special background available for species, 70% chance to use it
+            if (specialBackgrounds[species] && Math.random() < 0.7) {
+                return pickRandom(specialBackgrounds[species]);
+            }
+            
+            return pickRandom(backgrounds);
+        }
+        
+        function generateAppearance(species, gender) {
+            let description = "";
+            
+            // Height
+            const heights = {
+                human: { male: ["Short", "Average height", "Tall", "Very tall"], 
+                         female: ["Short", "Average height", "Tall", "Very tall"],
+                         other: ["Short", "Average height", "Tall", "Very tall"] },
+                abhuman: { male: ["Squat", "Unnaturally tall", "Hulking", "Diminutive"], 
+                          female: ["Squat", "Unnaturally tall", "Hulking", "Diminutive"],
+                          other: ["Squat", "Unnaturally tall", "Hulking", "Diminutive"] },
+                adeptus_mechanicus: { male: ["Hunched", "Towering", "Asymmetric", "Standard-pattern"], 
+                                      female: ["Hunched", "Towering", "Asymmetric", "Standard-pattern"],
+                                      other: ["Hunched", "Towering", "Asymmetric", "Standard-pattern"] },
+                navigator: { male: ["Slender", "Gaunt", "Tall", "Willowy"], 
+                            female: ["Slender", "Gaunt", "Tall", "Willowy"],
+                            other: ["Slender", "Gaunt", "Tall", "Willowy"] },
+                astropath: { male: ["Withered", "Frail", "Skeletal", "Wasted"], 
+                            female: ["Withered", "Frail", "Skeletal", "Wasted"],
+                            other: ["Withered", "Frail", "Skeletal", "Wasted"] },
+                sensei: { male: ["Perfectly proportioned", "Statuesque", "Idealized", "Heroic"], 
+                         female: ["Perfectly proportioned", "Statuesque", "Idealized", "Heroic"],
+                         other: ["Perfectly proportioned", "Statuesque", "Idealized", "Heroic"] },
+                xenobreed: { male: ["Subtly wrong", "Almost human", "Uncannily proportioned", "Alien-limbed"], 
+                            female: ["Subtly wrong", "Almost human", "Uncannily proportioned", "Alien-limbed"],
+                            other: ["Subtly wrong", "Almost human", "Uncannily proportioned", "Alien-limbed"] }
+            };
+            
+            // Build
+            const builds = {
+                human: { male: ["Wiry", "Athletic", "Muscular", "Heavyset", "Portly", "Stocky"], 
+                         female: ["Slim", "Athletic", "Muscular", "Curvy", "Stout", "Stocky"],
+                         other: ["Thin", "Athletic", "Muscular", "Heavy", "Solid", "Stocky"] },
+                abhuman: { male: ["Brutish", "Stunted", "Malproportioned", "Overdeveloped"], 
+                          female: ["Brutish", "Stunted", "Malproportioned", "Overdeveloped"],
+                          other: ["Brutish", "Stunted", "Malproportioned", "Overdeveloped"] },
+                adeptus_mechanicus: { male: ["Augmented", "More machine than flesh", "Mechanically enhanced", "Partially replaced"], 
+                                      female: ["Augmented", "More machine than flesh", "Mechanically enhanced", "Partially replaced"],
+                                      other: ["Augmented", "More machine than flesh", "Mechanically enhanced", "Partially replaced"] },
+                navigator: { male: ["Unnaturally thin", "Elongated", "Graceful", "Ethereal"], 
+                            female: ["Unnaturally thin", "Elongated", "Graceful", "Ethereal"],
+                            other: ["Unnaturally thin", "Elongated", "Graceful", "Ethereal"] },
+                astropath: { male: ["Emaciated", "Soul-withered", "Slight", "Hollow"], 
+                            female: ["Emaciated", "Soul-withered", "Slight", "Hollow"],
+                            other: ["Emaciated", "Soul-withered", "Slight", "Hollow"] },
+                sensei: { male: ["Perfect physique", "Immortal vigor", "Ageless strength", "Mythic form"], 
+                         female: ["Perfect physique", "Immortal vigor", "Ageless strength", "Mythic form"],
+                         other: ["Perfect physique", "Immortal vigor", "Ageless strength", "Mythic form"] },
+                xenobreed: { male: ["Inhuman musculature", "Xenos-touched", "Not-quite-human", "Hybrid vigor"], 
+                            female: ["Inhuman musculature", "Xenos-touched", "Not-quite-human", "Hybrid vigor"],
+                            other: ["Inhuman musculature", "Xenos-touched", "Not-quite-human", "Hybrid vigor"] }
+            };
+            
+            // Face
+            const faces = {
+                human: ["scarred", "weathered", "noble", "common", "handsome", "beautiful", "ugly", "plain", "distinctive", "forgettable"],
+                abhuman: ["bestial", "mutated", "feral", "inhuman", "abhuman", "grotesque", "fearsome"],
+                adeptus_mechanicus: ["augmetic", "partially mechanical", "mask-like", "vox-grilled", "tech-integrated", "vestigial"],
+                navigator: ["hooded", "blindfolded", "aristocratic", "warp-touched", "third-eye concealing", "noble-bred"],
+                astropath: ["eyeless", "blind", "psychically marked", "soul-bound scarred", "emperor-touched", "warp-withered"],
+                sensei: ["perfect", "ageless", "iconic", "heroic", "inspiring", "timeless"],
+                xenobreed: ["almost-human", "xenos-featured", "subtly alien", "uncanny", "hybrid", "gene-spliced"]
+            };
+            
+            // Special features
+            const specials = {
+                human: [
+                    "Augmetic arm that gestures inappropriately in tense situations",
+                    "Mechanical eye that occasionally records the wrong things",
+                    "Collection of campaign scars arranged like constellations",
+                    "Walks with a limp but runs perfectly fine when scared",
+                    "Ritual scarification showing devotion to the Emperor",
+                    "Missing digits replaced with simple augmetics",
+                    "Hive-pallor that never faded despite years in space",
+                    "Death world tribal tattoos that glow faintly in darkness",
+                    "Unusually colored eyes from unknown genetic quirk",
+                    "Voice augmetic that occasionally switches to inappropriate volume"
+                ],
+                abhuman: [
+                    "More pronounced abhuman features when emotional",
+                    "Attempts to hide abhuman traits with creative clothing",
+                    "Distinctly non-regulation teeth or claws",
+                    "Unusually patterned skin or fur",
+                    "Subdermal implants to appear more human",
+                    "Proudly displayed mutation as mark of distinction",
+                    "Signs of experimental 'corrective' procedures",
+                    "Unique adaptations perfect for their specialist role",
+                    "Ceremonial markings showing clan or tribe status",
+                    "Unexplained minor mutations beyond their abhuman type"
+                ],
+                adeptus_mechanicus: [
+                    "Exposed circuitry that sparks when agitated",
+                    "Decorative but non-functional gears and cogs",
+                    "Mechadendrites with inappropriate attachments",
+                    "Incense censers integrated into limbs",
+                    "Vocalizer that expresses emotion they claim not to have",
+                    "Overly complex augmetics for simple tasks",
+                    "Different generations of tech implants showing patchy upgrades",
+                    "Cherubim familiar that looks suspiciously like them",
+                    "Optical units in unusual colors or numbers",
+                    "Binary cant tattoos visible on remaining flesh"
+                ],
+                navigator: [
+                    "Elaborate third eye covering of personal design",
+                    "Warp-touched skin with subtle luminescence",
+                    "Vestigial mutations carefully hidden by high collars",
+                    "Family heraldry prominently displayed on all clothing",
+                    "Ghostly pallor from generations in void-ships",
+                    "Ornate navigator house jewelry and symbols",
+                    "Eyes that occasionally shift color during warp translation",
+                    "Elegant but practical clothing suitable for bridge duties",
+                    "Subtle signs of inbreeding carefully disguised",
+                    "Unexplained temporal anomalies in their presence"
+                ],
+                astropath: [
+                    "Soul-binding scars around empty eye sockets",
+                    "Psychic hood fused permanently to skull",
+                    "Staff that acts as psychic focus and walking aid",
+                    "Ghostly whispers audible around them at all times",
+                    "Skin etched with microscopic hexagrammic wards",
+                    "Minor objects levitate when they're distracted",
+                    "Temperature drops noticeably in their presence",
+                    "Constantly moving hands as if sending messages",
+                    "Eyes replaced with smooth obsidian orbs",
+                    "Servitor companion that records all messages"
+                ],
+                sensei: [
+                    "Appears simultaneously young and ancient",
+                    "Perfect features with one deliberate flaw",
+                    "Ageless appearance with ancient eyes",
+                    "Subtle golden aura visible in dim light",
+                    "Wounds that heal as you watch",
+                    "Voice with unusual harmonics that inspire loyalty",
+                    "Strange birthmark resembling Imperial symbols",
+                    "No visible scars despite countless battles",
+                    "Weapons and armor that seem part of them",
+                    "Unexplained charismatic presence that affects everyone nearby"
+                ],
+                xenobreed: [
+                    "Inhuman features disguised with creative fashion",
+                    "Odd-colored blood visible through translucent skin",
+                    "Non-standard number of digits carefully hidden by gloves",
+                    "Pupils that change shape under stress",
+                    "Subtle scales or chitin patches passed off as skin condition",
+                    "Strange dietary requirements explained away as 'allergies'",
+                    "Unusual bodily symmetry or proportions",
+                    "Voice with harmonics outside human range",
+                    "Unexplained physiological abilities they downplay",
+                    "Pheromones that cause unease in animals"
+                ]
+            };
+            
+            // Determine gender key for arrays
+            let genderKey = "other";
+            if (gender === "Male") genderKey = "male";
+            if (gender === "Female") genderKey = "female";
+            
+            // Generate appearance description
+            let heightDesc = "of average height";
+            if (heights[species] && heights[species][genderKey]) {
+                heightDesc = pickRandom(heights[species][genderKey]).toLowerCase();
+            }
+            
+            let buildDesc = "medium build";
+            if (builds[species] && builds[species][genderKey]) {
+                buildDesc = pickRandom(builds[species][genderKey]).toLowerCase();
+            }
+            
+            let faceDesc = "unremarkable face";
+            if (faces[species]) {
+                faceDesc = pickRandom(faces[species]) + " face";
+            }
+            
+            let specialDesc = "";
+            if (specials[species]) {
+                specialDesc = pickRandom(specials[species]);
+            }
+            
+            description = `A ${heightDesc}, ${buildDesc} individual with a ${faceDesc}. ${specialDesc}`;
+            
+            return description;
+        }
+        
+        function generateEquipment(species, career) {
+            let equipment = [];
+            
+            // Determine equipment based on career and species
+            let weaponPool = EQUIPMENT_WEAPONS;
+            let armorPool = EQUIPMENT_ARMOR;
+            let gearPool = EQUIPMENT_GEAR;
+            
+            // Add special equipment based on species/career
+            switch(species) {
+                case 'navigator':
+                    gearPool = gearPool.concat(NAVIGATOR_EQUIPMENT);
+                    break;
+                case 'adeptus_mechanicus':
+                    gearPool = gearPool.concat(TECH_PRIEST_EQUIPMENT);
+                    break;
+                case 'astropath':
+                    gearPool = gearPool.concat(ASTROPATH_EQUIPMENT);
+                    break;
+            }
+            
+            if (career === 'rogue_trader') {
+                gearPool = gearPool.concat(ROGUE_TRADER_EQUIPMENT);
+            }
+            
+            // Add 1-2 weapons
+            const weaponCount = randomInt(1, 2);
+            for (let i = 0; i < weaponCount; i++) {
+                const weapon = pickRandom(weaponPool);
+                if (!equipment.includes(weapon)) {
+                    equipment.push(weapon);
+                }
+            }
+            
+            // Add 1 armor
+            equipment.push(pickRandom(armorPool));
+            
+            // Add 2-4 gear items
+            const gearCount = randomInt(2, 4);
+            for (let i = 0; i < gearCount; i++) {
+                const gear = pickRandom(gearPool);
+                if (!equipment.includes(gear)) {
+                    equipment.push(gear);
+                }
+            }
+            
+            // Add 1-2 quirky items
+            const quirkyItems = [
+                "Lucky charm made from xenos bone fragment",
+                "Music box that plays Imperial hymns (off-key)",
+                "Stuffed grox toy 'for good luck'",
+                "Jar of homeworld soil/ash",
+                "Preserved finger of 'saint' (authenticity questionable)",
+                "Collection of suspect 'historical artifacts'",
+                "Forbidden romance novel hidden in Uplifting Primer cover",
+                "Mysterious key they've had 'forever'",
+                "Xenos coin used for 'important decisions'",
+                "Half-finished memoir dataslate",
+                "Trick knife for impressing new crew",
+                "Rare spice collection from across the sector",
+                "Hololithic player with inappropriate dancers",
+                "Emperor 'action figure' they pray to",
+                "Carefully pressed flower from destroyed world",
+                "Inert grenade kept as paperweight",
+                "Vial of 'genuine' saint's tears",
+                "Trick pict-taker that always shows the Emperor",
+                "Book of 'jokes' that are all heretical",
+                "Counterfeit noble patents and titles",
+                "Gyrinx fur brush they claim is a 'familiar'",
+                "Auto-quill that misspells blasphemous words",
+                "Ship-in-a-bottle with working tiny tech-priests",
+                "Psychic-hood liner (doesn't work, but 'feels safer')",
+                "Collection of rocks that look like famous Primarchs",
+                "Mechanical songbird that knows forbidden melodies"
+            ];
+            
+            const quirkyCount = randomInt(1, 2);
+            for (let i = 0; i < quirkyCount; i++) {
+                equipment.push(pickRandom(quirkyItems));
+            }
+            
+            return equipment;
+        }
+        
+        function generateCharacteristics() {
+            return {
+                WS: generateCharacteristicValue(),
+                BS: generateCharacteristicValue(),
+                S: generateCharacteristicValue(),
+                T: generateCharacteristicValue(),
+                Ag: generateCharacteristicValue(),
+                Int: generateCharacteristicValue(),
+                Per: generateCharacteristicValue(),
+                WP: generateCharacteristicValue(),
+                Fel: generateCharacteristicValue()
+            };
+        }
+        
+        function generateSkills(career) {
+            const commonSkills = [
+                "Awareness",
+                "Barter",
+                "Charm",
+                "Climb",
+                "Concealment",
+                "Contortionist",
+                "Deceive", 
+                "Disguise",
+                "Dodge",
+                "Evaluate",
+                "Gamble",
+                "Inquiry",
+                "Intimidate",
+                "Logic",
+                "Scrutiny",
+                "Search",
+                "Silent Move",
+                "Swim"
+            ];
+            
+            const careerSkills = {
+                arch_militant: [
+                    "Command +10",
+                    "Intimidate +20",
+                    "Heavy Weapons +10",
+                    "Dodge +10", 
+                    "Wrangling (Guards)",
+                    "Tactical Drinking +20"
+                ],
+                explorator: [
+                    "Tech-Use +20",
+                    "Forbidden Lore (Archeotech) +10",
+                    "Logic +10",
+                    "Binary Chanting +10",
+                    "Evaluate (Technology) +20",
+                    "Unnecessarily Complex Repair +10"
+                ],
+                missionary: [
+                    "Charm +10",
+                    "Deceive +10",
+                    "Intimidate +10",
+                    "Forbidden Lore (Heresy) +10",
+                    "Emperor Quotes For Any Situation +20",
+                    "Creative Interpretation of Doctrine +20"
+                ],
+                navigator: [
+                    "Navigation (Warp) +20",
+                    "Forbidden Lore (Warp) +10",
+                    "Scholastic Lore (Navigator Houses) +20",
+                    "Psyniscience +10",
+                    "Condescension +20",
+                    "Cryptic Warnings +10" 
+                ],
+                rogue_trader: [
+                    "Charm +20",
+                    "Deceive +20",
+                    "Evaluate +10",
+                    "Scholastic Lore (Bureaucracy) +10",
+                    "Profit Calculation +20",
+                    "Dramatic Entrances +20"
+                ],
+                seneschal: [
+                    "Commerce +20",
+                    "Evaluate +10",
+                    "Inquiry +10",
+                    "Scholastic Lore (Bureaucracy) +20",
+                    "Creative Accounting +20",
+                    "Finding Loopholes +10"
+                ],
+                void_master: [
+                    "Pilot (Spacecraft) +20",
+                    "Navigation (Stellar) +10",
+                    "Command +10",
+                    "Tech-Use +10",
+                    "Inappropriate Ship Metaphors +20",
+                    "Gravity Well Avoidance +10"
+                ],
+                astropath_transcendent: [
+                    "Psyniscience +20",
+                    "Invocation +10",
+                    "Forbidden Lore (Warp) +10",
+                    "Scholastic Lore (Astromancy) +20",
+                    "Cryptic Message Composition +20",
+                    "Dramatic Psychic Gestures +10"
+                ]
+            };
+            
+            let skills = [];
+            
+            // Add 3-5 common skills
+            const commonSkillCount = randomInt(3, 5);
+            for (let i = 0; i < commonSkillCount; i++) {
+                const skill = pickRandom(commonSkills);
+                if (!skills.includes(skill)) {
+                    skills.push(skill);
+                }
+            }
+            
+            // Add 4-6 career skills
+            if (careerSkills[career]) {
+                const careerSkillCount = randomInt(4, 6);
+                const availableCareerSkills = [...careerSkills[career]];
+                for (let i = 0; i < careerSkillCount && availableCareerSkills.length > 0; i++) {
+                    const skillIndex = Math.floor(Math.random() * availableCareerSkills.length);
+                    skills.push(availableCareerSkills[skillIndex]);
+                    availableCareerSkills.splice(skillIndex, 1);
+                }
+            }
+            
+            return skills;
+        }
+        
+        function generatePersonality() {
+            const personalityTraits = pickRandom(PERSONALITY_TRAITS);
+            const quirk = pickRandom(QUIRKS);
+            const physicalQuirk = pickRandom(PHYSICAL_QUIRKS);
+            
+            return {
+                trait: personalityTraits,
+                quirk: quirk,
+                physical: physicalQuirk
+            };
+        }
+        
+        function generateNPC() {
+            // Get selected values or randomize
+            const speciesSelect = document.getElementById('species-select');
+            const careerSelect = document.getElementById('career-select');
+            
+            let selectedSpecies = speciesSelect.value;
+            let selectedCareer = careerSelect.value;
+            
+            // If random is selected, pick random values
+            if (selectedSpecies === 'random') {
+                selectedSpecies = weightedRandom(SPECIES);
+            }
+            
+            if (selectedCareer === 'random') {
+                selectedCareer = weightedRandom(CAREERS);
+            }
+            
+            // Generate character data
+            const gender = generateGender();
+            
+            const character = {
+                name: generateName(selectedSpecies),
+                species: SPECIES[selectedSpecies].name,
+                career: CAREERS[selectedCareer].name,
+                gender: gender,
+                age: generateAge(selectedSpecies),
+                homeworld: generateHomeworld(),
+                background: generateBackground(selectedSpecies, selectedCareer),
+                appearance: generateAppearance(selectedSpecies, gender),
+                characteristics: generateCharacteristics(),
+                skills: generateSkills(selectedCareer),
+                personality: generatePersonality(),
+                equipment: generateEquipment(selectedSpecies, selectedCareer),
+                flavorQuote: pickRandom(FLAVOR_QUOTES)
+            };
+            
+            return character;
+        }
+        
+        function displayCharacter(character) {
+            const output = document.getElementById('character-output');
+            
+            let html = `
+                <div class="sheet-header">
+                    <div class="character-name">${character.name}</div>
+                    <div>${character.species} ${character.career}</div>
+                </div>
+                
+                <div class="character-info">
+                    <div>
+                        <strong>Gender:</strong> ${character.gender}<br>
+                        <strong>Age:</strong> ${character.age}<br>
+                        <strong>Homeworld:</strong> ${character.homeworld}<br>
+                    </div>
+                    <div>
+                        <strong>Background:</strong> ${character.background}
+                    </div>
+                </div>
+                
+                <div class="characteristics">
+                    <div class="characteristic">
+                        <div class="stat-name">WS</div>
+                        <div class="stat-value">${character.characteristics.WS}</div>
+                    </div>
+                    <div class="characteristic">
+                        <div class="stat-name">BS</div>
+                        <div class="stat-value">${character.characteristics.BS}</div>
+                    </div>
+                    <div class="characteristic">
+                        <div class="stat-name">S</div>
+                        <div class="stat-value">${character.characteristics.S}</div>
+                    </div>
+                    <div class="characteristic">
+                        <div class="stat-name">T</div>
+                        <div class="stat-value">${character.characteristics.T}</div>
+                    </div>
+                    <div class="characteristic">
+                        <div class="stat-name">Ag</div>
+                        <div class="stat-value">${character.characteristics.Ag}</div>
+                    </div>
+                    <div class="characteristic">
+                        <div class="stat-name">Int</div>
+                        <div class="stat-value">${character.characteristics.Int}</div>
+                    </div>
+                    <div class="characteristic">
+                        <div class="stat-name">Per</div>
+                        <div class="stat-value">${character.characteristics.Per}</div>
+                    </div>
+                    <div class="characteristic">
+                        <div class="stat-name">WP</div>
+                        <div class="stat-value">${character.characteristics.WP}</div>
+                    </div>
+                    <div class="characteristic">
+                        <div class="stat-name">Fel</div>
+                        <div class="stat-value">${character.characteristics.Fel}</div>
+                    </div>
+                </div>
+                
+                <div class="flavor-quote">
+                    "${character.flavorQuote}"
+                </div>
+                
+                <div class="appearance">
+                    <h2>Appearance</h2>
+                    <p>${character.appearance}</p>
+                </div>
+                
+                <div class="personality">
+                    <h2>Personality</h2>
+                    <p><strong>Dominant Trait:</strong> ${character.personality.trait}</p>
+                    <p><strong>Notable Quirk:</strong> ${character.personality.quirk}</p>
+                    <p><strong>Physical Quirk:</strong> ${character.personality.physical}</p>
+                </div>
+                
+                <div class="skills">
+                    <h2>Skills</h2>
+                    <p>${character.skills.join(", ")}</p>
+                </div>
+                
+                <div class="equipment">
+                    <h2>Equipment</h2>
+                    <ul class="equipment-list">
+                        ${character.equipment.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="bio">
+                    <h2>Bio Summary</h2>
+                    <p>${generateBioSummary(character)}</p>
+                </div>
+            `;
+            
+            output.innerHTML = html;
+        }
+        
+        function generateBioSummary(character) {
+            // Generate a humorous bio based on character traits
+            const bioTemplates = [
+                `${character.name} hails from the ${character.homeworld === "Unknown" ? "mysterious depths of an unknown world" : character.homeworld}, where ${character.gender === "Male" ? "he" : character.gender === "Female" ? "she" : "they"} developed a profound ${character.personality.trait.toLowerCase()} streak. Now serving as a ${character.career}, ${character.gender === "Male" ? "he" : character.gender === "Female" ? "she" : "they"} can often be found ${character.personality.quirk.toLowerCase()}. Crewmates have learned to tolerate the fact that ${character.gender === "Male" ? "he" : character.gender === "Female" ? "she" : "they"} ${character.personality.physical.toLowerCase()}.`,
+                
+                `Born amid the ${character.homeworld === "Unknown" ? "unknown reaches of space" : "distinctive culture of " + character.homeworld}, ${character.name} spent years developing an expertise in ${character.skills[0].toLowerCase()} and ${character.skills.length > 1 ? character.skills[1].toLowerCase() : "avoiding direct questions"}. As a ${character.species} ${character.career}, ${character.gender === "Male" ? "his" : character.gender === "Female" ? "her" : "their"} tendency to ${character.personality.quirk.toLowerCase()} has proven surprisingly useful, though superiors remain concerned about reports that ${character.gender === "Male" ? "he" : character.gender === "Female" ? "she" : "they"} ${character.personality.physical.toLowerCase()}.`,
+                
+                `${character.name} serves aboard ship as a ${character.career}, bringing unique ${character.species} perspectives and an unfortunate habit of ${character.personality.quirk.toLowerCase()}. Colleagues note ${character.gender === "Male" ? "his" : character.gender === "Female" ? "her" : "their"} exceptional skill with ${character.skills.length > 0 ? character.skills[Math.floor(Math.random() * character.skills.length)].toLowerCase() : "avoiding work"}, though many keep their distance due to the fact that ${character.gender === "Male" ? "he" : character.gender === "Female" ? "she" : "they"} ${character.personality.physical.toLowerCase()}.`,
+                
+                `After an incident involving ${pickRandom(["a misplaced plasma core", "three inebriated navigators", "a surprisingly intelligent servitor", "contraband xenos artifacts", "unauthorized use of ship resources", "a case of mistaken identity", "experimental combat stimms", "the captain's favorite amasec", "falsified service records", "a gambling debt gone wrong"])}, ${character.name} found ${character.gender === "Male" ? "himself" : character.gender === "Female" ? "herself" : "themselves"} reassigned as a ${character.career}. Despite being ${character.personality.trait.toLowerCase()}, ${character.gender === "Male" ? "he" : character.gender === "Female" ? "she" : "they"} has proven unexpectedly adept, though shipmates remain wary of ${character.gender === "Male" ? "his" : character.gender === "Female" ? "her" : "their"} tendency to ${character.personality.quirk.toLowerCase()}.`,
+                
+                `It is said among the crew that ${character.name} once ${pickRandom(["single-handedly defeated an ork raiding party", "outdrank an entire Guard regiment", "survived three standard weeks in a malfunctioning savior pod", "made a profit trading with Eldar corsairs", "memorized an entire sector's worth of warp routes", "talked a customs official into paying them", "accidentally discovered a lost human colony", "bluffed their way out of a Chaos cultist ritual", "invented a still that turns engine coolant into fine amasec", "caught a tyranid genestealer with a fishing rod"])}, though nobody has verified this claim. What is certain is that this ${character.species} ${character.career} is notoriously ${character.personality.trait.toLowerCase()} and can frequently be observed ${character.personality.quirk.toLowerCase()}.`
+            ];
+            
+            return pickRandom(bioTemplates);
+        }
+        
+        // Event listener for the generate button
+        document.getElementById('generate-button').addEventListener('click', function() {
+            const character = generateNPC();
+            displayCharacter(character);
+        });
+        
+        // Generate a character on page load
+        window.onload = function() {
+            const character = generateNPC();
+            displayCharacter(character);
+        };
+    </script>
+</body>
+</html>
