@@ -557,8 +557,17 @@
             // Evaluate any JavaScript expressions in the template
             bioTemplate = bioTemplate.replace(/\{([^}]+)\}/g, (match, expr) => {
                 try {
+                    // Make character data available to the eval context
+                    const skills = character.skills;
+                    const pickRandom = (array) => array[Math.floor(Math.random() * array.length)];
+                    const homeworld = character.homeworld;
+                    
+                    // Fix Math.Floor to Math.floor (case sensitive)
+                    expr = expr.replace(/Math\.Floor/g, "Math.floor");
+                    
                     return eval(expr);
                 } catch (e) {
+                    console.error("Error evaluating expression:", expr, e);
                     return match;
                 }
             });
