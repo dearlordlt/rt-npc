@@ -17,7 +17,30 @@ const COMMON_SKILLS = [
     "Scrutiny",
     "Search",
     "Silent Move",
-    "Swim"
+    "Swim",
+    "Acrobatics",
+    "Athletics",
+    "Carouse",
+    "Common Lore (Imperium)",
+    "Common Lore (War)",
+    "Common Lore (Tech)",
+    "Demolition",
+    "Drive (Ground Vehicle)",
+    "Drive (Walker)",
+    "Literacy",
+    "Medicae (Basic)",
+    "Navigation (Surface)",
+    "Performer (Storyteller)",
+    "Pilot (Civilian Craft)",
+    "Sleight of Hand",
+    "Stealth",
+    "Survival",
+    "Tactics (Small Unit)",
+    "Tech-Use (Basic)",
+    "Tracking",
+    "Trade (Cook)",
+    "Trade (Armorer)",
+    "Wrangling"
 ];
 
 const CAREER_SKILLS = {
@@ -84,5 +107,85 @@ const CAREER_SKILLS = {
         "Scholastic Lore (Astromancy) +20",
         "Cryptic Message Composition +20",
         "Dramatic Psychic Gestures +10"
+    ],
+    chirurgeon: [
+        "Medicae +20",
+        "Chem-Use +10",
+        "Scholastic Lore (Chymistry) +10",
+        "Trade (Apothecary) +20",
+        "Disturbing Bedside Manner +10",
+        "Experimental Treatment Enthusiasm +20"
+    ],
+    enginseer: [
+        "Tech-Use +20",
+        "Common Lore (Machine Cult) +10",
+        "Trade (Technomat) +20",
+        "Evaluate (Technology) +10",
+        "Machine Spirit Whispering +20",
+        "Unnecessary Maintenance Rituals +10"
+    ],
+    commissar: [
+        "Intimidate +20",
+        "Command +20",
+        "Scholastic Lore (Tactica Imperialis) +10",
+        "Dodge +10",
+        "Morale-Boosting Executions +20",
+        "Dramatic Hat Adjustment +10"
+    ],
+    inquisitorial_acolyte: [
+        "Scrutiny +20",
+        "Inquiry +20",
+        "Forbidden Lore (Various) +10",
+        "Concealment +10",
+        "Ominous Inquisitorial Staring +20",
+        "Heresy Detection In Mundane Objects +10"
+    ],
+    administratum_scribe: [
+        "Literacy +20",
+        "Scholastic Lore (Bureaucracy) +20",
+        "Logic +10",
+        "Evaluate +10",
+        "Form Completion Efficiency +20",
+        "Bureaucratic Obstruction +10"
+    ],
+    tech_wright: [
+        "Tech-Use +10",
+        "Trade (Wright) +20",
+        "Evaluate (Technology) +10",
+        "Repair +20",
+        "Percussive Maintenance +10",
+        "Improvised Technical Solutions +20"
+    ],
+    void_born_mystic: [
+        "Psyniscience +10",
+        "Forbidden Lore (Warp) +10",
+        "Navigation (Void) +20",
+        "Scrutiny +10",
+        "Cryptic Void Prophecies +20",
+        "Unsettling Void Stare +10"
+    ],
+    xenographer: [
+        "Speak Language (Xenos) +20",
+        "Forbidden Lore (Xenos) +20",
+        "Scholastic Lore (Xenology) +10",
+        "Evaluate +10",
+        "Inappropriate Xenos Cultural Practices +10",
+        "Disturbing Xenos Anatomical Knowledge +20"
+    ],
+    sanctioned_witch: [
+        "Psyniscience +20",
+        "Invocation +20",
+        "Forbidden Lore (Psykers) +10",
+        "Awareness +10",
+        "Dramatic Psychic Manifestations +20",
+        "Unsettling Warp Whispers +10"
+    ],
+    death_cult_assassin: [
+        "Silent Move +20",
+        "Concealment +20",
+        "Acrobatics +10",
+        "Dodge +10",
+        "Theatrical Killing Methods +20",
+        "Ritualistic Weapon Maintenance +10"
     ]
 };
