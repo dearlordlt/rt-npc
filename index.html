@@ -121,6 +121,28 @@
             font-size: 20px;
             font-weight: bold;
         }
+        .characteristics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .reroll-button {
+            background-color: #4a4a4a;
+            color: #ff6400;
+            border: 1px solid #ff6400;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+        .reroll-button:hover {
+            background-color: #ff6400;
+            color: #000;
+        }
         .bio {
             line-height: 1.5;
         }
@@ -192,6 +214,12 @@
                 <option value="seneschal">Seneschal</option>
                 <option value="void-master">Void-Master</option>
                 <option value="astropath_transcendent">Astropath Transcendent</option>
+            </select>
+            
+            <select id="power-level-select">
+                <option value="medium">Medium Power</option>
+                <option value="easy">Low Power</option>
+                <option value="hard">High Power</option>
             </select>
             
             <button id="generate-button">Generate NPC</button>
@@ -493,8 +521,19 @@
         }
         
         function generateCharacteristicValue() {
-            // Generate values between 25-45 as base stats
-            return randomInt(25, 45);
+            // Get the selected power level
+            const powerLevel = document.getElementById('power-level-select').value;
+            
+            // Generate values based on power level
+            switch(powerLevel) {
+                case 'easy':
+                    return randomInt(20, 35); // Lower stats for easy mode
+                case 'hard':
+                    return randomInt(35, 50); // Higher stats for hard mode
+                case 'medium':
+                default:
+                    return randomInt(25, 45); // Default medium stats
+            }
         }
         
         function generateName(species) {
@@ -1182,6 +1221,10 @@
                     </div>
                 </div>
                 
+                <div class="characteristics-header">
+                    <h2>Characteristics</h2>
+                    <button id="reroll-stats-button" class="reroll-button">Reroll Stats</button>
+                </div>
                 <div class="characteristics">
                     <div class="characteristic">
                         <div class="stat-name">WS</div>
@@ -1275,6 +1318,33 @@
             return pickRandom(bioTemplates);
         }
         
+        // Function to reroll just the stats
+        function rerollStats() {
+            // Get the stat value elements
+            const statValues = document.querySelectorAll('.stat-value');
+            
+            // Generate new stats
+            const newStats = {
+                WS: generateCharacteristicValue(),
+                BS: generateCharacteristicValue(),
+                S: generateCharacteristicValue(),
+                T: generateCharacteristicValue(),
+                Ag: generateCharacteristicValue(),
+                Int: generateCharacteristicValue(),
+                Per: generateCharacteristicValue(),
+                WP: generateCharacteristicValue(),
+                Fel: generateCharacteristicValue()
+            };
+            
+            // Update the stat values in the DOM
+            const statNames = ['WS', 'BS', 'S', 'T', 'Ag', 'Int', 'Per', 'WP', 'Fel'];
+            statValues.forEach((element, index) => {
+                if (index < statNames.length) {
+                    element.textContent = newStats[statNames[index]];
+                }
+            });
+        }
+        
         // Event listener for the generate button
         document.getElementById('generate-button').addEventListener('click', function() {
             const character = generateNPC();
@@ -1285,7 +1355,19 @@
         window.onload = function() {
             const character = generateNPC();
             displayCharacter(character);
+            
+            // Add event listener for the reroll stats button
+            document.getElementById('reroll-stats-button').addEventListener('click', rerollStats);
         };
+        
+        // Add event listener for the reroll stats button after character display
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(event) {
+                if (event.target && event.target.id === 'reroll-stats-button') {
+                    rerollStats();
+                }
+            });
+        });
     </script>
 </body>
 </html>
